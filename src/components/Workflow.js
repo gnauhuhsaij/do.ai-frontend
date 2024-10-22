@@ -1,54 +1,111 @@
 import React, { useState } from 'react';
+import '../styles/Workflow.css';
 
-const Workflow = ({ workflow }) => {
-  // State to track which subtasks are expanded (open)
+const Workflow = ({ workflow, phaseDict }) => {
+  const groupedByPhase = workflow.reduce((acc, subtask) => {
+    acc[subtask.phase] = acc[subtask.phase] || [];
+    acc[subtask.phase].push(subtask);
+    return acc;
+  }, {});
+
   const [expandedSubtasks, setExpandedSubtasks] = useState({});
+  const [expandedSteps, setExpandedSteps] = useState({});
 
-  // Toggle the expanded state of a subtask
   const toggleSubtask = (index) => {
     setExpandedSubtasks((prev) => ({
       ...prev,
-      [index]: !prev[index], // Toggle the specific subtask's state
+      [index]: !prev[index], // Toggle subtask visibility by index
     }));
   };
 
-  const [selectedStep, setSelectedStep] = useState(null);
+  const toggleStepDetails = (subtaskIndex, stepIndex) => {
+    setExpandedSteps((prev) => ({
+      ...prev,
+      [`${subtaskIndex}-${stepIndex}`]: !prev[`${subtaskIndex}-${stepIndex}`],
+    }));
+  };
+
+  const getRoleLabel = (role) => {
+    switch (role) {
+      case 'AI':
+        return 'AI';
+      case 'Human':
+        return 'H';
+      default:
+        return 'B';
+    }
+  };
 
   return (
     <div className="workflow-container">
-      {workflow.map((subtask, index) => (
-        <div key={index} className="subtask">
-          {/* Subtask Title (clickable to toggle) */}
-          <h2 onClick={() => toggleSubtask(index)} className="subtask-title">
-            {subtask.name}
-          </h2>
-          <p className="subtask-description">{subtask.description}</p>
+      {Object.entries(groupedByPhase).map(([phase, subtasks], phaseIndex) => (
+        <div key={phase} className="phase-row">
+          <div className="phase-label-container">
+            {/* Use phaseDict to display the phase name */}
+            <span className="phase-label-text">
+              {`PHASE ${phaseIndex + 1} - ${phaseDict[phase] || `Phase ${phase}`}`}
+            </span>
+          </div>
+          <div className="subtasks-wrapper">
+            {subtasks.map((subtask, subtaskIndex) => (
+              <div
+                key={subtaskIndex}
+                className="subtask"
+                onClick={() => toggleSubtask(`${phaseIndex}-${subtaskIndex}`)}
+              >
+                <h2 className="subtask-title">
+                {/* {`${String.fromCharCode(65 + subtaskIndex)} - ${subtask.description}`} */}
+                {subtask.description}
+                </h2>
+                {/* <p className="subtask-description">{}</p> */}
 
-          {/* Conditionally render steps if the subtask is expanded */}
-          {expandedSubtasks[index] && (
-            <div className="steps">
-              {subtask.steps.map((step, i) => (
-                <div
-                  key={i}
-                  className="step"
-                  onClick={() => setSelectedStep(step)}
-                >
-                  {step}
-                </div>
-              ))}
-            </div>
-          )}
+                {expandedSubtasks[`${phaseIndex}-${subtaskIndex}`] && (
+                  <div className="steps">
+                    {subtask.steps.map((step, stepIndex) => (
+                      <div
+                        key={stepIndex}
+                        className="step"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleStepDetails(
+                            `${phaseIndex}-${subtaskIndex}`,
+                            stepIndex
+                          );
+                        }}
+                      >
+                        <div className="step-header">
+                          <div className="step-indexCircle">{stepIndex + 1}</div>
+                          <div className="step-name">{step.name}</div>
+                          <div className={`step-roleCircle ${getRoleLabel(step.role)}`}>
+                            {getRoleLabel(step.role)}
+                          </div>
+                        </div>
+
+                        {expandedSteps[`${phaseIndex}-${subtaskIndex}-${stepIndex}`] && (
+                          <div className="step-details">
+                            <div className="step-attribute">
+                              <strong>Objective</strong> <br />
+                              {step.objective}
+                            </div>
+                            <div className="step-attribute">
+                              <strong>Role</strong> <br />
+                              {step.role}
+                            </div>
+                            <div className="step-attribute">
+                              <strong>Rationale</strong> <br />
+                              {step.rationale}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       ))}
-
-      {/* Side window for selected step */}
-      {selectedStep && (
-        <div className="side-window">
-          <h3>Step Details</h3>
-          <p>{selectedStep}</p>
-          <button onClick={() => setSelectedStep(null)}>Close</button>
-        </div>
-      )}
     </div>
   );
 };

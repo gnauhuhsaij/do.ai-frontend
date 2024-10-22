@@ -1,38 +1,33 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* App container - Ensures full-page layout */
+.app-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row; /* Row layout for two side-by-side areas */
+  height: 100vh; /* Full screen height */
+  width: 100vw;
+  gap: 0px;
+  overflow: hidden; /* Prevent scrolling */
 }
 
-.App-link {
-  color: #61dafb;
+/* Content area - Right side of the screen */
+.content-area {
+  background-color: transparent;
+  margin-left: 0vw;
+  flex: 1; /* Take up remaining space */
+  flex-grow: 1;
+  padding: 0px;
+  overflow-y: hidden; /* Scroll content if needed */
+  display: flex;
+  flex-direction: column; /* Ensure column layout inside */
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: margin-left 0.3s ease; /* Smooth transition for resizing */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sidebar.collapsed + .content-area {
+  margin-left: 60px; /* Adjust margin when sidebar is collapsed */
 }
+
+.sidebar.open + .content-area {
+  margin-left: 15vw; /* Adjust margin when sidebar is open */
+}
+
