@@ -1,10 +1,9 @@
-
 .dropdown-container {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-
+  width: 10%;
 }
 
 .dropdown-button {

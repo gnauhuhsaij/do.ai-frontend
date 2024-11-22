@@ -17,8 +17,9 @@ a {
   flex-direction: column;
   align-items: flex-start; /* Align content to the left */
   justify-content: flex-start;
+  width: 60%;
   padding: 40px;
-  margin-left: 100px;
+  /* margin-left: 100px; */
   gap: 20px; /* Add spacing between elements */
 }
 
