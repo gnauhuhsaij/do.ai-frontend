@@ -30,4 +30,3 @@
 .sidebar.open + .content-area {
   margin-left: 15vw; /* Adjust margin when sidebar is open */
 }
-

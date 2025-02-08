@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/Dashboard.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "../styles/Dashboard.css";
 
 const Dashboard = () => {
   return (
     <div className="dashboard">
-    <Link to="/start-project">
-      <button className="start-project-btn">
-        <p>+ Start a project</p>
-      </button>
-    </Link>
+      <Link to="/start-project">
+        <button className="start-project-btn">
+          <p>+ Start a project</p>
+        </button>
+      </Link>
       <div className="project-section">
         <h3>Recent</h3>
         <div className="projects">
@@ -39,4 +39,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
